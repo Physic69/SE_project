@@ -4,8 +4,7 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FollowList } from "@/components/profile/follow-list";
-import { Grid3x3, Bookmark, UserSquare2, Lock, Users, UserCheck } from "lucide-react"; // ✨ Added Users, UserCheck
+import { Grid3x3, Bookmark, UserSquare2, Lock, FileText, Heart, MessageSquare, Share2, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import type { Post } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client"; // We need a client for posts
@@ -43,12 +42,12 @@ export default async function ProfilePage({ params }: { params: { username: stri
     console.error("Error fetching profile:", error);
     notFound();
   }
-  console.log("2. Fetched Profile Data (Raw):", profile);
 
-  // 3. Determine Privacy (for POSTS)
-  // ✨ Use 'private' as the check
+  // 2. Determine Privacy (for POSTS)
   const isProfilePrivate = (profile.privacy_settings?.profile_visibility ?? 'public') === 'private';
-  console.log(`3. Privacy Check (Posts): isProfilePrivate? ${isProfilePrivate} (Value: ${profile.privacy_settings?.profile_visibility})`);
+  
+  // 3. Determine Privacy (for BUTTON) - This is the logic from your branch
+  const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? 'public') !== 'public';
 
   // 4. Determine Privacy (for BUTTON)
 const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? 'public') !== 'public';
@@ -57,9 +56,8 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
 
   // 5. Check Ownership
   const isOwner = authUser?.id === profile.id;
-  console.log("5. Relationship: isOwner?", isOwner);
 
-  // 6. Check Follow Status
+  // 5. Check Follow Status (using your correct 'followers' table logic)
   let isFollowing = false;
   if (authUser && !isOwner) {
     const { data: follow } = await supabase
@@ -72,7 +70,6 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
     console.log("6. Follow Check: Found follow relationship?", follow);
     isFollowing = !!follow;
   }
-  console.log("7. Relationship: isFollowing?", isFollowing);
 
   // 7. Check Post Access
   const canViewPosts = !isProfilePrivate || isOwner || isFollowing;
@@ -112,7 +109,6 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
     
     isVerified: false, // You can add logic for this later
   };
-  console.log("11. Final userProfile prop:", userProfile);
 
   return (
     <AppShell>
@@ -154,9 +150,9 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
               <div className="grid grid-cols-3 md:grid-cols-3 gap-1 md:gap-4">
                 {posts.length > 0 ? (
                   posts.map((post) => (
-                    <div key={post.id} className="relative aspect-square">
-                      {/* Check for media and media[0] */}
-                      {post.media && post.media[0] && post.media[0].url ? (
+                    // Using trashgrp's PostClickHandler
+                    <PostClickHandler key={post.id} post={post}>
+                      {post.media?.[0]?.url ? (
                         <Image
                           src={post.media[0].url}
                           alt={post.text || "Post image"}
@@ -170,7 +166,7 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
                           </span>
                         </div>
                       )}
-                    </div>
+                    </PostClickHandler>
                   ))
                 ) : (
                   <div className="text-center text-muted-foreground py-16 col-span-3">
@@ -221,4 +217,3 @@ const requiresFollowRequest = (profile.privacy_settings?.profile_visibility ?? '
     </AppShell>
   );
 }
-

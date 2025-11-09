@@ -27,7 +27,6 @@ type Profile = {
   is_private: boolean; // This will now control the Lock Icon
 };
 
-// ✨ --- PROPS CHANGED --- ✨
 // We now accept 'requiresFollowRequest' to control the button
 export function ProfileHeader({ 
   user: initialUser, 

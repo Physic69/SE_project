@@ -114,3 +114,24 @@ export type StoryReaction = {
   reaction_type: 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry';
   created_at: string;
 };
+
+export type Message = {
+  id: number;
+  conversation_id: number;
+  sender: UserProfile;
+  content: string;
+  created_at: string;
+  is_read: boolean;
+};
+
+export type Participant = UserProfile;
+
+export type Conversation = {
+  id: number;
+  created_at: string;
+  participants: {
+    data: Participant[];
+  };
+  last_message: Message | null;
+  unread_count: number;
+};

@@ -1,4 +1,3 @@
-// src/components/privacy/privacy-settings.tsx
 
 "use client";
 
@@ -79,7 +78,6 @@ export function PrivacySettings({ userId, onSettingsUpdate }: PrivacySettingsPro
     }
   };
 
-  // --- ✨ NEW SIMPLIFIED LOGIC ---
   const updateSetting = async (key: keyof PrivacySettings, value: any) => {
     setIsSaving(true);
     
@@ -133,7 +131,6 @@ export function PrivacySettings({ userId, onSettingsUpdate }: PrivacySettingsPro
     }
   };
 
-
   const getVisibilityIcon = (visibility: string) => {
     switch (visibility) {
       case 'public':
@@ -181,15 +178,15 @@ export function PrivacySettings({ userId, onSettingsUpdate }: PrivacySettingsPro
   return (
     <div className="space-y-6">
       <Card>
-  <CardHeader>
-    <CardTitle className="flex items-center gap-2">
-      <Shield className="h-5 w-5" />
-      Privacy Settings
-    </CardTitle>
-    <CardDescription>
-      Control who can see your content and interact with you
-    </CardDescription>
-  </CardHeader>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            Privacy Settings
+          </CardTitle>
+          <CardDescription>
+            Control who can see your content and interact with you
+          </CardDescription>
+        </CardHeader>
 
         <CardContent className="space-y-6">
           {/* Profile Visibility */}
@@ -201,7 +198,6 @@ export function PrivacySettings({ userId, onSettingsUpdate }: PrivacySettingsPro
                 <div>
                   <p className="font-medium">Profile Visibility</p>
                   <p className="text-sm text-muted-foreground">
-                    {/* I updated the description to be more clear */}
                     {getVisibilityDescription(settings.profile_visibility)}
                   </p>
                 </div>
@@ -305,7 +301,6 @@ export function PrivacySettings({ userId, onSettingsUpdate }: PrivacySettingsPro
             />
           </div>
 
-          {/* --- ✨ REMOVED the "Private Account" Switch --- */}
 
           {/* Direct Messages */}
           <div className="space-y-3">
